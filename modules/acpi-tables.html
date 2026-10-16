@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AcpiTables — HpMint2 學習文件</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar">
+<h1>HpMint2 學習文件</h1>
+<div class="tag">EDK II platform · 離線靜態站</div>
+<h2>總覽與建置</h2><ul>
+<li><a href="../index.html">模組清單</a></li>
+<li><a href="00-overview.html">平台總覽</a></li>
+<li><a href="01-repo-root.html">Repo 根目錄</a></li>
+<li><a href="02-build-entry.html">建置進口</a></li>
+</ul>
+<h2>共用 driver / library</h2><ul>
+<li><a href="acpi-tables.html" class="current">AcpiTables</a></li>
+<li><a href="include.html">Include</a></li>
+<li><a href="library.html">Library</a></li>
+<li><a href="pci-platform.html">PciPlatformDxe</a></li>
+<li><a href="flash-info.html">FlashInfo</a></li>
+<li><a href="bios-update-policy.html">BiosUpdatePlatformPolicy</a></li>
+<li><a href="platform-setup.html">PlatformSetup</a></li>
+<li><a href="platform-forms.html">PlatformForms</a></li>
+<li><a href="platform-mud.html">PlatformMud</a></li>
+<li><a href="platform-wmi.html">PlatformPrivateWMI</a></li>
+<li><a href="hp-icicle.html">HpIcicle</a></li>
+<li><a href="secure-storage.html">HpSecureStorageDevice</a></li>
+<li><a href="z2-thermal.html">風扇與 APU 功耗</a></li>
+<li><a href="hp-z2-ecc.html">HpZ2AmdEccLink</a></li>
+<li><a href="hotkey.html">Hotkey</a></li>
+<li><a href="smart-cover.html">SmartCover</a></li>
+<li><a href="als.html">AlsCalibration</a></li>
+<li><a href="amd-sio-vw.html">AmdSioVwSmi</a></li>
+<li><a href="wifi-support.html">WiFiSupport</a></li>
+</ul>
+<h2>Fixup</h2><ul>
+<li><a href="fixup.html">Fixup / Override</a></li>
+</ul>
+<h2>MultiProject</h2><ul>
+<li><a href="multiproject.html">共用骨架</a></li>
+<li><a href="x53-config.html">X53Mint Config</a></li>
+<li><a href="x53-cpm.html">X53Mint CpmOverride</a></li>
+<li><a href="x53-apcb.html">X53Mint APCB</a></li>
+<li><a href="x53-hpfeature.html">X53Mint HpFeature</a></li>
+<li><a href="x53-porting.html">X53Mint Porting</a></li>
+<li><a href="x53-services.html">X53Mint Services</a></li>
+<li><a href="x53-bld-bin.html">X53Mint BLD / EC / FUR</a></li>
+<li><a href="x89-chiron.html">X89Chiron 差異</a></li>
+<li><a href="w95-maple.html">W95MapleCRB 差異</a></li>
+</ul>
+</nav>
+<main>
+  <header class="page">
+    <h1>AcpiTables</h1>
+  </header>
+  <p class="role">平台 ACPI 表的組裝點：共用 DSDT 片段 + 依板名分子目錄的 SSDT（Modern Standby、PMF、Sensor Fusion、Wireless Button）。</p>
+  
+<h2>大綱</h2>
+<ul class="outline">
+  <li><code>AcpiTables.inf</code>：把 ASL/ACT 編成 ACPI 驅動。</li>
+  <li><code>Dsdt/</code>：主命名空間。<code>Platform.asl</code>、<code>CPU.asl</code>、<code>THERMAL.asl</code>、<code>BATTERY.asl</code>、<code>PciTree.asl</code>。</li>
+  <li><code>Dsdt/Fch/</code>：FCH 裝置（XHCI、SATA、Azalia、ACP、USB4、MP2、NHI）。</li>
+  <li><code>Dsdt/PCIDevicesList/</code>：WLAN、NIC、WWAN、PSP 等 PCI 子樹。</li>
+  <li><code>Dsdt/I2CDevicesList/</code>：觸控板、觸控面板、ALS、TBT、dAMP。</li>
+  <li><code>Dsdt/IrqRouting/</code>、<code>Dxio/</code>、<code>OpRegion/</code>。</li>
+  <li>標準表：<code>Facp</code>、<code>Facs</code>、<code>Madt</code>、<code>Mcfg</code>、<code>Hpet</code>。</li>
+  <li><code>Ssdt/</code> 依 <code>Z2_MINI</code> / <code>MWS_A</code> / <code>CRB5</code>：ModernStandby（uPEP、NVMe D3/RTD3）、APMF、SensorFusion、WirelessButtonHid。</li>
+</ul>
+<h2>詳細解釋</h2>
+<p>ASL 透過 <code>PlatLongNameMapAsl.h</code>、<code>PlatformAcpiAsl.h</code> 對到 C 的 PCD/宏。CpmOverride 的 OEM ACPI（<code>AmdCpmOemAcpi</code>）會再補 GPP PME、GPIO、I2C 觸控等 SSDT，不要和這裡的 Dsdt 搞混：這邊是「平台整包 DSDT」，那邊是 AMD CPM feature 的附加表。</p>
+<p>讀 DSDT 建議順序：<code>Platform.asl</code> → <code>PciTree.asl</code> → 目標裝置所在 list → 對應 SSDT 板目錄。</p>
+
+  <section class="next"><h2>建議接著看</h2><p><a href="x53-cpm.html">CpmOverride ACPI</a> · <a href="include.html">Include</a></p></section>
+</main>
+</div>
+</body>
+</html>

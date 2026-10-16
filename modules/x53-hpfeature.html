@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>X53Mint HpFeature — HpMint2 學習文件</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar">
+<h1>HpMint2 學習文件</h1>
+<div class="tag">EDK II platform · 離線靜態站</div>
+<h2>總覽與建置</h2><ul>
+<li><a href="../index.html">模組清單</a></li>
+<li><a href="00-overview.html">平台總覽</a></li>
+<li><a href="01-repo-root.html">Repo 根目錄</a></li>
+<li><a href="02-build-entry.html">建置進口</a></li>
+</ul>
+<h2>共用 driver / library</h2><ul>
+<li><a href="acpi-tables.html">AcpiTables</a></li>
+<li><a href="include.html">Include</a></li>
+<li><a href="library.html">Library</a></li>
+<li><a href="pci-platform.html">PciPlatformDxe</a></li>
+<li><a href="flash-info.html">FlashInfo</a></li>
+<li><a href="bios-update-policy.html">BiosUpdatePlatformPolicy</a></li>
+<li><a href="platform-setup.html">PlatformSetup</a></li>
+<li><a href="platform-forms.html">PlatformForms</a></li>
+<li><a href="platform-mud.html">PlatformMud</a></li>
+<li><a href="platform-wmi.html">PlatformPrivateWMI</a></li>
+<li><a href="hp-icicle.html">HpIcicle</a></li>
+<li><a href="secure-storage.html">HpSecureStorageDevice</a></li>
+<li><a href="z2-thermal.html">風扇與 APU 功耗</a></li>
+<li><a href="hp-z2-ecc.html">HpZ2AmdEccLink</a></li>
+<li><a href="hotkey.html">Hotkey</a></li>
+<li><a href="smart-cover.html">SmartCover</a></li>
+<li><a href="als.html">AlsCalibration</a></li>
+<li><a href="amd-sio-vw.html">AmdSioVwSmi</a></li>
+<li><a href="wifi-support.html">WiFiSupport</a></li>
+</ul>
+<h2>Fixup</h2><ul>
+<li><a href="fixup.html">Fixup / Override</a></li>
+</ul>
+<h2>MultiProject</h2><ul>
+<li><a href="multiproject.html">共用骨架</a></li>
+<li><a href="x53-config.html">X53Mint Config</a></li>
+<li><a href="x53-cpm.html">X53Mint CpmOverride</a></li>
+<li><a href="x53-apcb.html">X53Mint APCB</a></li>
+<li><a href="x53-hpfeature.html" class="current">X53Mint HpFeature</a></li>
+<li><a href="x53-porting.html">X53Mint Porting</a></li>
+<li><a href="x53-services.html">X53Mint Services</a></li>
+<li><a href="x53-bld-bin.html">X53Mint BLD / EC / FUR</a></li>
+<li><a href="x89-chiron.html">X89Chiron 差異</a></li>
+<li><a href="w95-maple.html">W95MapleCRB 差異</a></li>
+</ul>
+</nav>
+<main>
+  <header class="page">
+    <h1>X53Mint HpFeature</h1>
+  </header>
+  <p class="role">把共用 HpFeature 套件「打開哪些、hook 接到哪」寫成 DSC，並提供板級 Library。程式本體仍在 gitman 的 HpFeature。</p>
+  
+<h2>大綱 — Config DSC</h2>
+<p>由 <code>HpFeaturePlatformConfig.dsc</code> 全部 include：</p>
+<ul>
+  <li>Misc / Boot / System / BuiltInDevice / Port / PowerManagement</li>
+  <li>UsbPort、ErrorHandling、HID、RTD3 ACPI、Diagnostic、Thermal、FirmwareFlash、Audio</li>
+  <li>Gfx：HpGfxMisc、Nvidia、AmdGraphics、Lid、Brightness、DreamColor、InstantOn、AmdPowerXpress、AddonGfxPolicy、AioGfxPolicy</li>
+</ul>
+<p>Notebook 用 Lid/Brightness；Desktop 用 AddonGfx；AIO 用 AioGfx。Mint Mini 仍可能編進多份 policy，實際生效看 PCD。</p>
+<h2>大綱 — 板級 Library 目錄</h2>
+<table>
+<thead><tr><th>路徑</th><th>hook</th></tr></thead>
+<tbody>
+<tr><td>HpUsbPortConfig/Library/HpPlatformUsbPortConfigLib</td><td>USB port 對應。</td></tr>
+<tr><td>PortOptions/Library/HpStorageEnablePlatformHookPeiLib</td><td>儲存啟用 PEI hook。</td></tr>
+<tr><td>HpThermal/Library/HpThermalPlatformHookBaseLib</td><td>熱 hook。</td></tr>
+<tr><td>HpFeatureMisc/Library/HpGpioFeatureSupportTableLib</td><td>GPIO feature 表。</td></tr>
+<tr><td>HpHumanInterfaceDevices/.../ButtonIndicatorPlatformHookLib</td><td>按鈕指示燈。</td></tr>
+<tr><td>HpRtd3AcpiPlatform/.../HpRtd3AcpiPlatformUpdateLib</td><td>RTD3 ACPI 更新。</td></tr>
+<tr><td>HpGfx/*</td><td>Addon/AIO boot priority、PCIe slot 定義、PowerXpress GPIO、亮度 EDID、OLED、Lid、DreamColor ROM WP、InstantOn TCON、GPU SSID、Post logo。</td></tr>
+</tbody>
+</table>
+<h2>詳細解釋</h2>
+<p>學習時把「Config.dsc 的 TRUE/FALSE」和「Library 的表」當成兩層：前者決定鏈結哪個 INF，後者是這塊 PCB 的數字（哪個 GPIO 是 lid、哪個 PCIe slot 是 dGPU）。</p>
+
+  <section class="next"><h2>建議接著看</h2><p><a href="library.html">共用 Library</a> · <a href="x89-chiron.html">筆電 Gfx 差異</a></p></section>
+</main>
+</div>
+</body>
+</html>

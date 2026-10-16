@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>X53Mint CpmOverride — HpMint2 學習文件</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar">
+<h1>HpMint2 學習文件</h1>
+<div class="tag">EDK II platform · 離線靜態站</div>
+<h2>總覽與建置</h2><ul>
+<li><a href="../index.html">模組清單</a></li>
+<li><a href="00-overview.html">平台總覽</a></li>
+<li><a href="01-repo-root.html">Repo 根目錄</a></li>
+<li><a href="02-build-entry.html">建置進口</a></li>
+</ul>
+<h2>共用 driver / library</h2><ul>
+<li><a href="acpi-tables.html">AcpiTables</a></li>
+<li><a href="include.html">Include</a></li>
+<li><a href="library.html">Library</a></li>
+<li><a href="pci-platform.html">PciPlatformDxe</a></li>
+<li><a href="flash-info.html">FlashInfo</a></li>
+<li><a href="bios-update-policy.html">BiosUpdatePlatformPolicy</a></li>
+<li><a href="platform-setup.html">PlatformSetup</a></li>
+<li><a href="platform-forms.html">PlatformForms</a></li>
+<li><a href="platform-mud.html">PlatformMud</a></li>
+<li><a href="platform-wmi.html">PlatformPrivateWMI</a></li>
+<li><a href="hp-icicle.html">HpIcicle</a></li>
+<li><a href="secure-storage.html">HpSecureStorageDevice</a></li>
+<li><a href="z2-thermal.html">風扇與 APU 功耗</a></li>
+<li><a href="hp-z2-ecc.html">HpZ2AmdEccLink</a></li>
+<li><a href="hotkey.html">Hotkey</a></li>
+<li><a href="smart-cover.html">SmartCover</a></li>
+<li><a href="als.html">AlsCalibration</a></li>
+<li><a href="amd-sio-vw.html">AmdSioVwSmi</a></li>
+<li><a href="wifi-support.html">WiFiSupport</a></li>
+</ul>
+<h2>Fixup</h2><ul>
+<li><a href="fixup.html">Fixup / Override</a></li>
+</ul>
+<h2>MultiProject</h2><ul>
+<li><a href="multiproject.html">共用骨架</a></li>
+<li><a href="x53-config.html">X53Mint Config</a></li>
+<li><a href="x53-cpm.html" class="current">X53Mint CpmOverride</a></li>
+<li><a href="x53-apcb.html">X53Mint APCB</a></li>
+<li><a href="x53-hpfeature.html">X53Mint HpFeature</a></li>
+<li><a href="x53-porting.html">X53Mint Porting</a></li>
+<li><a href="x53-services.html">X53Mint Services</a></li>
+<li><a href="x53-bld-bin.html">X53Mint BLD / EC / FUR</a></li>
+<li><a href="x89-chiron.html">X89Chiron 差異</a></li>
+<li><a href="w95-maple.html">W95MapleCRB 差異</a></li>
+</ul>
+</nav>
+<main>
+  <header class="page">
+    <h1>X53Mint CpmOverride</h1>
+  </header>
+  <p class="role">AMD CPM 的 OEM 覆寫：PEI 填數十張硬體表，DXE 掛 OEM ACPI，SMM 補 OEM SMM。這是改 GPIO/PCIe/USB PHY 的第一站。</p>
+  
+<h2>大綱</h2>
+<ul class="outline">
+  <li>PEI：<code>AmdCpm3OemInitPeim.inf</code>、<code>AmdCpmOem.h</code>、<code>Table/</code></li>
+  <li>DXE：<code>AmdCpmOemInitDxe</code>、<code>AmdCpmOemAcpi</code>（ASL：GPP PME、GPIO、I2C touch、PRx/PSx）</li>
+  <li>SMM：<code>AmdCpmOemSmm</code></li>
+  <li>Library：<code>GpioResetControlLib</code>、<code>AmdPbsConfigLib</code>（PEI+DXE）</li>
+  <li>Features ASL：Modern Standby uPEP/NVMe D3、ACP Audio、PMF board</li>
+</ul>
+<h3>PEI Table/ 清單</h3>
+<table>
+<thead><tr><th>檔案</th><th>主題</th></tr></thead>
+<tbody>
+<tr><td>AmdCpmGpioInitSettinggs.c / FwApplyGpioSettings.c</td><td>GPIO 初始與 FW 套用。</td></tr>
+<tr><td>AmdCpmPlatformDxioSettings.c</td><td>DXIO / PCIe lane 對應。</td></tr>
+<tr><td>AmdCpmPciDeviceSettings.c / IncompatiblePciDev.c / FwApprovedDeviceList.c / FwSkipPcieSettings.c</td><td>PCI 裝置白/黑名單與 skip。</td></tr>
+<tr><td>AmdCpmUsbPhySettings_VerA.c / Usb4ReservedResource.c / UcsiSettings.c</td><td>USB PHY、USB4 資源、UCSI。</td></tr>
+<tr><td>AmdCpmNvmeRtd3Settings.c</td><td>NVMe RTD3。</td></tr>
+<tr><td>AmdCpmWlanSettings.c / DisplayfeatureSettings.c / DevicePathSettings.c</td><td>WLAN、顯示、裝置路徑。</td></tr>
+<tr><td>AmdCpmPlatformIdSettings.c / GeventInitSettings.c / SaveContextSettings.c / PreInitSettings.c / MemEyeToolSettings.c</td><td>板 ID、G-event、S3 context、預先初始化、MemEye。</td></tr>
+</tbody>
+</table>
+<h2>詳細解釋</h2>
+<p>CPM（Common Platform Module）是 AMD 給 OEM 填表的層。表在 PEI 很早被消費，改錯 GPIO 會直接開不了機。DXE ACPI 則補 OS 看到的 Power Resource 與 touch 裝置。這與 <code>Fixup</code> 不同：CpmOverride 是正式 OEM 擴充點，Fixup 是對上游原始碼的補丁。</p>
+
+  <section class="next"><h2>建議接著看</h2><p><a href="acpi-tables.html">AcpiTables SSDT</a> · <a href="x53-apcb.html">APCB</a></p></section>
+</main>
+</div>
+</body>
+</html>

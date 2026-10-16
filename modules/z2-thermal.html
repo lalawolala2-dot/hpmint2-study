@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>風扇與 APU 功耗 — HpMint2 學習文件</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar">
+<h1>HpMint2 學習文件</h1>
+<div class="tag">EDK II platform · 離線靜態站</div>
+<h2>總覽與建置</h2><ul>
+<li><a href="../index.html">模組清單</a></li>
+<li><a href="00-overview.html">平台總覽</a></li>
+<li><a href="01-repo-root.html">Repo 根目錄</a></li>
+<li><a href="02-build-entry.html">建置進口</a></li>
+</ul>
+<h2>共用 driver / library</h2><ul>
+<li><a href="acpi-tables.html">AcpiTables</a></li>
+<li><a href="include.html">Include</a></li>
+<li><a href="library.html">Library</a></li>
+<li><a href="pci-platform.html">PciPlatformDxe</a></li>
+<li><a href="flash-info.html">FlashInfo</a></li>
+<li><a href="bios-update-policy.html">BiosUpdatePlatformPolicy</a></li>
+<li><a href="platform-setup.html">PlatformSetup</a></li>
+<li><a href="platform-forms.html">PlatformForms</a></li>
+<li><a href="platform-mud.html">PlatformMud</a></li>
+<li><a href="platform-wmi.html">PlatformPrivateWMI</a></li>
+<li><a href="hp-icicle.html">HpIcicle</a></li>
+<li><a href="secure-storage.html">HpSecureStorageDevice</a></li>
+<li><a href="z2-thermal.html" class="current">風扇與 APU 功耗</a></li>
+<li><a href="hp-z2-ecc.html">HpZ2AmdEccLink</a></li>
+<li><a href="hotkey.html">Hotkey</a></li>
+<li><a href="smart-cover.html">SmartCover</a></li>
+<li><a href="als.html">AlsCalibration</a></li>
+<li><a href="amd-sio-vw.html">AmdSioVwSmi</a></li>
+<li><a href="wifi-support.html">WiFiSupport</a></li>
+</ul>
+<h2>Fixup</h2><ul>
+<li><a href="fixup.html">Fixup / Override</a></li>
+</ul>
+<h2>MultiProject</h2><ul>
+<li><a href="multiproject.html">共用骨架</a></li>
+<li><a href="x53-config.html">X53Mint Config</a></li>
+<li><a href="x53-cpm.html">X53Mint CpmOverride</a></li>
+<li><a href="x53-apcb.html">X53Mint APCB</a></li>
+<li><a href="x53-hpfeature.html">X53Mint HpFeature</a></li>
+<li><a href="x53-porting.html">X53Mint Porting</a></li>
+<li><a href="x53-services.html">X53Mint Services</a></li>
+<li><a href="x53-bld-bin.html">X53Mint BLD / EC / FUR</a></li>
+<li><a href="x89-chiron.html">X89Chiron 差異</a></li>
+<li><a href="w95-maple.html">W95MapleCRB 差異</a></li>
+</ul>
+</nav>
+<main>
+  <header class="page">
+    <h1>風扇與 APU 功耗</h1>
+  </header>
+  <p class="role">Z2 Mini 工作站熱設計的三塊：PEI 讀 cooler/GPIO 瓦數並套 IRM、PEI 進階風扇、DXE 把 SIO 風扇表更新進去。</p>
+  
+<h2>大綱</h2>
+<table>
+<thead><tr><th>模組</th><th>類型</th><th>做什麼</th></tr></thead>
+<tbody>
+<tr><td><code>HpZ2PerformacePei</code></td><td>PEIM</td><td>讀 GPIO140/142/144（PLT_ID）決定 120/85/65/55W，查 IRM 表寫 SPL/PPT/VRM PCD。</td></tr>
+<tr><td><code>HpZ2PremiumFanPei</code></td><td>PEIM</td><td>Abstract：在 PEI 取得 Cooler Fan type。</td></tr>
+<tr><td><code>FanControlUpdate</code></td><td>DXE_DRIVER</td><td>SioFanControl 介面；資料在 <code>FanControlUpdate/&lt;日期&gt;/&lt;瓦數&gt;/</code> 的聲學表。</td></tr>
+</tbody>
+</table>
+<h2>詳細解釋</h2>
+<p>IRM 表依 APU 瓦數 × 模式（High Performance / Performance / Quiet / Rack）填 Sustained Power、Fast/Slow PPT、STAPM、VRM current。這些 PCD 在 <code>HpPlatformPkg.dec</code> 的 Dynamic 區（<code>PcdCpuCoolerType</code>、<code>PcdApuPower</code>、<code>PcdSlowPPTConstant</code>、<code>PcdPSUFanError</code>）。</p>
+<p>風扇曲線按日期版本放純文字表（例如 55W Quiet Mode Rev_06），方便聲學團隊丟檔而不改 C。DXE 驅動在開機時把對應表灌進 SIO 風扇邏輯。</p>
+<p>相關還有 <code>Library/HpFanConfigurationLib</code> 與 X53 的 <code>HpThermalPlatformHookBaseLib</code>、<code>HpThermalConfig.dsc</code>。</p>
+
+  <section class="next"><h2>建議接著看</h2><p><a href="x53-hpfeature.html">HpThermalConfig</a> · <a href="library.html">HpFanConfigurationLib</a></p></section>
+</main>
+</div>
+</body>
+</html>

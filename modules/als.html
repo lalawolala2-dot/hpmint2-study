@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AlsCalibration — HpMint2 學習文件</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar">
+<h1>HpMint2 學習文件</h1>
+<div class="tag">EDK II platform · 離線靜態站</div>
+<h2>總覽與建置</h2><ul>
+<li><a href="../index.html">模組清單</a></li>
+<li><a href="00-overview.html">平台總覽</a></li>
+<li><a href="01-repo-root.html">Repo 根目錄</a></li>
+<li><a href="02-build-entry.html">建置進口</a></li>
+</ul>
+<h2>共用 driver / library</h2><ul>
+<li><a href="acpi-tables.html">AcpiTables</a></li>
+<li><a href="include.html">Include</a></li>
+<li><a href="library.html">Library</a></li>
+<li><a href="pci-platform.html">PciPlatformDxe</a></li>
+<li><a href="flash-info.html">FlashInfo</a></li>
+<li><a href="bios-update-policy.html">BiosUpdatePlatformPolicy</a></li>
+<li><a href="platform-setup.html">PlatformSetup</a></li>
+<li><a href="platform-forms.html">PlatformForms</a></li>
+<li><a href="platform-mud.html">PlatformMud</a></li>
+<li><a href="platform-wmi.html">PlatformPrivateWMI</a></li>
+<li><a href="hp-icicle.html">HpIcicle</a></li>
+<li><a href="secure-storage.html">HpSecureStorageDevice</a></li>
+<li><a href="z2-thermal.html">風扇與 APU 功耗</a></li>
+<li><a href="hp-z2-ecc.html">HpZ2AmdEccLink</a></li>
+<li><a href="hotkey.html">Hotkey</a></li>
+<li><a href="smart-cover.html">SmartCover</a></li>
+<li><a href="als.html" class="current">AlsCalibration</a></li>
+<li><a href="amd-sio-vw.html">AmdSioVwSmi</a></li>
+<li><a href="wifi-support.html">WiFiSupport</a></li>
+</ul>
+<h2>Fixup</h2><ul>
+<li><a href="fixup.html">Fixup / Override</a></li>
+</ul>
+<h2>MultiProject</h2><ul>
+<li><a href="multiproject.html">共用骨架</a></li>
+<li><a href="x53-config.html">X53Mint Config</a></li>
+<li><a href="x53-cpm.html">X53Mint CpmOverride</a></li>
+<li><a href="x53-apcb.html">X53Mint APCB</a></li>
+<li><a href="x53-hpfeature.html">X53Mint HpFeature</a></li>
+<li><a href="x53-porting.html">X53Mint Porting</a></li>
+<li><a href="x53-services.html">X53Mint Services</a></li>
+<li><a href="x53-bld-bin.html">X53Mint BLD / EC / FUR</a></li>
+<li><a href="x89-chiron.html">X89Chiron 差異</a></li>
+<li><a href="w95-maple.html">W95MapleCRB 差異</a></li>
+</ul>
+</nav>
+<main>
+  <header class="page">
+    <h1>AlsCalibration</h1>
+  </header>
+  <p class="role">DXE_DRIVER：環境光感測器（ALS）校正資料的平台側處理。</p>
+  
+<h2>大綱</h2>
+<ul class="outline">
+  <li><code>AlsCalibrationDxe.inf</code> — 入口 <code>AlsCalibrationDxeEntryPoint</code></li>
+</ul>
+<h2>詳細解釋</h2>
+<p>ACPI 有 <code>Dsdt/I2CDevicesList/ALS.asl</code>。校正值可能來自工廠 MUD 或變數，DXE 負責在 OS 前準備好。筆電/AIO 較常用；Mini 工作站若無 ALS 裝置，驅動會早退。</p>
+
+  <section class="next"><h2>建議接著看</h2><p><a href="acpi-tables.html">ALS.asl</a> · <a href="platform-mud.html">PlatformMud</a></p></section>
+</main>
+</div>
+</body>
+</html>

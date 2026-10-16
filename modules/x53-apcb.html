@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>X53Mint APCB — HpMint2 學習文件</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar">
+<h1>HpMint2 學習文件</h1>
+<div class="tag">EDK II platform · 離線靜態站</div>
+<h2>總覽與建置</h2><ul>
+<li><a href="../index.html">模組清單</a></li>
+<li><a href="00-overview.html">平台總覽</a></li>
+<li><a href="01-repo-root.html">Repo 根目錄</a></li>
+<li><a href="02-build-entry.html">建置進口</a></li>
+</ul>
+<h2>共用 driver / library</h2><ul>
+<li><a href="acpi-tables.html">AcpiTables</a></li>
+<li><a href="include.html">Include</a></li>
+<li><a href="library.html">Library</a></li>
+<li><a href="pci-platform.html">PciPlatformDxe</a></li>
+<li><a href="flash-info.html">FlashInfo</a></li>
+<li><a href="bios-update-policy.html">BiosUpdatePlatformPolicy</a></li>
+<li><a href="platform-setup.html">PlatformSetup</a></li>
+<li><a href="platform-forms.html">PlatformForms</a></li>
+<li><a href="platform-mud.html">PlatformMud</a></li>
+<li><a href="platform-wmi.html">PlatformPrivateWMI</a></li>
+<li><a href="hp-icicle.html">HpIcicle</a></li>
+<li><a href="secure-storage.html">HpSecureStorageDevice</a></li>
+<li><a href="z2-thermal.html">風扇與 APU 功耗</a></li>
+<li><a href="hp-z2-ecc.html">HpZ2AmdEccLink</a></li>
+<li><a href="hotkey.html">Hotkey</a></li>
+<li><a href="smart-cover.html">SmartCover</a></li>
+<li><a href="als.html">AlsCalibration</a></li>
+<li><a href="amd-sio-vw.html">AmdSioVwSmi</a></li>
+<li><a href="wifi-support.html">WiFiSupport</a></li>
+</ul>
+<h2>Fixup</h2><ul>
+<li><a href="fixup.html">Fixup / Override</a></li>
+</ul>
+<h2>MultiProject</h2><ul>
+<li><a href="multiproject.html">共用骨架</a></li>
+<li><a href="x53-config.html">X53Mint Config</a></li>
+<li><a href="x53-cpm.html">X53Mint CpmOverride</a></li>
+<li><a href="x53-apcb.html" class="current">X53Mint APCB</a></li>
+<li><a href="x53-hpfeature.html">X53Mint HpFeature</a></li>
+<li><a href="x53-porting.html">X53Mint Porting</a></li>
+<li><a href="x53-services.html">X53Mint Services</a></li>
+<li><a href="x53-bld-bin.html">X53Mint BLD / EC / FUR</a></li>
+<li><a href="x89-chiron.html">X89Chiron 差異</a></li>
+<li><a href="w95-maple.html">W95MapleCRB 差異</a></li>
+</ul>
+</nav>
+<main>
+  <header class="page">
+    <h1>X53Mint APCB</h1>
+  </header>
+  <p class="role">AGESA Platform Configuration Block：每種 DRAM 顆粒一個子目錄。基底板資料在 Z2_MINI，vendor 目錄多半只覆寫 SPD。</p>
+  
+<h2>大綱</h2>
+<p>共用（<code>APCB/Z2_MINI/</code>）含 token、電壓、error out、eSPI、DP PHY、board-id 方法等 <code>ApcbData_FP11_GID_*</code> 檔。各 vendor 目錄有 <code>SetApcbDataFileList.bat</code>、<code>ApcbCustomizedBoardDefinitions.h</code>、<code>ApcbData_FP11_GID_0x1704_Type_SpdInfo.c</code> 與 SPD header。</p>
+<table>
+<thead><tr><th>目錄</th><th>代表 SPD / 顆粒</th></tr></thead>
+<tbody>
+<tr><td>Z2_MINI</td><td>板級 APCB 主體（非單一顆粒）。</td></tr>
+<tr><td>Z2_MINI_Samsung4 / 8 / 16</td><td>Samsung LPDDR5 容量 SKU。</td></tr>
+<tr><td>Z2_MINI_Samsung_E4 / E8 / E16</td><td>Samsung 「E」系列顆粒（如 K3KL8L80EM / K3KL9L90EM / K3KLALA0EM）。</td></tr>
+<tr><td>Z2_MINI_Hynix4 / 8 / 16</td><td>Hynix 容量 SKU。</td></tr>
+<tr><td>Z2_MINI_Hynix_C4 / C8 / C16</td><td>Hynix 「C」系列。</td></tr>
+<tr><td>Z2_MINI_Micron4 / 8 / 16</td><td>Micron（如 MT62F*）。</td></tr>
+</tbody>
+</table>
+<h2>詳細解釋</h2>
+<p>建置時 <code>BLD/ApcbBuild.bat</code> 依 BiosId / 專案選擇 file list，把對應 SPD 編進 PSP/AGESA 能吃的 APCB 映像。換顆粒 = 新目錄 + SPD header + 更新 bat 清單，而不是改 AGESA 核心。Fixup 裡也有一份 StrixHalo FP11 SPD header，給上游 AgesaPkg 補顆粒。</p>
+
+  <section class="next"><h2>建議接著看</h2><p><a href="02-build-entry.html">ApcbBuild.bat</a> · <a href="hp-z2-ecc.html">ECC link</a></p></section>
+</main>
+</div>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Repo 根目錄 — HpMint2 學習文件</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar">
+<h1>HpMint2 學習文件</h1>
+<div class="tag">EDK II platform · 離線靜態站</div>
+<h2>總覽與建置</h2><ul>
+<li><a href="../index.html">模組清單</a></li>
+<li><a href="00-overview.html">平台總覽</a></li>
+<li><a href="01-repo-root.html" class="current">Repo 根目錄</a></li>
+<li><a href="02-build-entry.html">建置進口</a></li>
+</ul>
+<h2>共用 driver / library</h2><ul>
+<li><a href="acpi-tables.html">AcpiTables</a></li>
+<li><a href="include.html">Include</a></li>
+<li><a href="library.html">Library</a></li>
+<li><a href="pci-platform.html">PciPlatformDxe</a></li>
+<li><a href="flash-info.html">FlashInfo</a></li>
+<li><a href="bios-update-policy.html">BiosUpdatePlatformPolicy</a></li>
+<li><a href="platform-setup.html">PlatformSetup</a></li>
+<li><a href="platform-forms.html">PlatformForms</a></li>
+<li><a href="platform-mud.html">PlatformMud</a></li>
+<li><a href="platform-wmi.html">PlatformPrivateWMI</a></li>
+<li><a href="hp-icicle.html">HpIcicle</a></li>
+<li><a href="secure-storage.html">HpSecureStorageDevice</a></li>
+<li><a href="z2-thermal.html">風扇與 APU 功耗</a></li>
+<li><a href="hp-z2-ecc.html">HpZ2AmdEccLink</a></li>
+<li><a href="hotkey.html">Hotkey</a></li>
+<li><a href="smart-cover.html">SmartCover</a></li>
+<li><a href="als.html">AlsCalibration</a></li>
+<li><a href="amd-sio-vw.html">AmdSioVwSmi</a></li>
+<li><a href="wifi-support.html">WiFiSupport</a></li>
+</ul>
+<h2>Fixup</h2><ul>
+<li><a href="fixup.html">Fixup / Override</a></li>
+</ul>
+<h2>MultiProject</h2><ul>
+<li><a href="multiproject.html">共用骨架</a></li>
+<li><a href="x53-config.html">X53Mint Config</a></li>
+<li><a href="x53-cpm.html">X53Mint CpmOverride</a></li>
+<li><a href="x53-apcb.html">X53Mint APCB</a></li>
+<li><a href="x53-hpfeature.html">X53Mint HpFeature</a></li>
+<li><a href="x53-porting.html">X53Mint Porting</a></li>
+<li><a href="x53-services.html">X53Mint Services</a></li>
+<li><a href="x53-bld-bin.html">X53Mint BLD / EC / FUR</a></li>
+<li><a href="x89-chiron.html">X89Chiron 差異</a></li>
+<li><a href="w95-maple.html">W95MapleCRB 差異</a></li>
+</ul>
+</nav>
+<main>
+  <header class="page">
+    <h1>Repo 根目錄</h1>
+  </header>
+  <p class="role">根目錄幾乎沒有產品程式；它是 GitHub/Azure 與相依套件的入口。根 README.md 仍是 HP platform-repo 範本，不是 Mint 產品說明。</p>
+  
+<h2>大綱</h2>
+<table>
+<thead><tr><th>路徑</th><th>內容</th></tr></thead>
+<tbody>
+<tr><td><code>README.md</code></td><td>sample-platform-repo 範本（pipeline、CODEOWNERS、分支保護說明）。</td></tr>
+<tr><td><code>.azurepipelines/</code></td><td><code>ci.yml</code>（X53Mint 主平台）、<code>x53-release-prod.yml</code> / <code>x53-release-test.yml</code>、<code>find-blocked-versions.yml</code>。</td></tr>
+<tr><td><code>.github/</code></td><td><code>CODEOWNERS</code>、<code>dependabot.yml</code>。</td></tr>
+<tr><td><code>gitman.yml</code></td><td>外部套件來源與 lock revision；public / private group。</td></tr>
+<tr><td><code>sonar-project.properties</code></td><td>SonarQube 掃描設定。</td></tr>
+<tr><td><code>var_map.yml</code></td><td>建置/發佈變數對應。</td></tr>
+<tr><td><code>.gitignore</code></td><td>忽略 gitman checkout（HpCore、Amd…）、Build、Fixup Backup。</td></tr>
+</tbody>
+</table>
+
+<h2>詳細解釋</h2>
+<h3>gitman 會拉什麼</h3>
+<ul>
+  <li><code>HpCore</code>（public 用 HpCoreMirror，private 用 HpCoreFull）</li>
+  <li><code>HpAmd</code>、<code>Amd</code>（AmdStrixHaloFP8FP11 → AGESA / CPM）</li>
+  <li><code>HpEpsc</code>（Nuvoton SIO、USB-C）</li>
+  <li><code>HpFeature</code>、<code>HpFeaturePvt</code> / <code>HpFeaturePvtBins</code></li>
+  <li><code>HpWsCommonPkg</code>（工作站共用，標了 HPQ-WKS）</li>
+  <li><code>ec-fw</code>：註解寫明不參與 BIOS 編譯，給 Halo pipeline 的 EC 測試</li>
+</ul>
+<p>CI 預設 <code>gitmantarget: private</code>。checkout 後這些目錄出現在 repo 根（已被 gitignore），<code>PlatformPkg.dsc</code> 用相對路徑 include 它們。</p>
+<h3>Azure Pipelines</h3>
+<p><code>ci.yml</code> 繼承 <code>bps-fw/templates</code> 的 <code>bios-ci-v2.yml</code>，可覆寫 gitman 依賴、可跳過 Sonar。平台清單目前只列 X53Mint。</p>
+
+  <section class="next"><h2>建議接著看</h2><p><a href="02-build-entry.html">建置進口</a> · <a href="00-overview.html">總覽</a></p></section>
+</main>
+</div>
+</body>
+</html>

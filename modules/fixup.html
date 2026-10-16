@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fixup / Override — HpMint2 學習文件</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar">
+<h1>HpMint2 學習文件</h1>
+<div class="tag">EDK II platform · 離線靜態站</div>
+<h2>總覽與建置</h2><ul>
+<li><a href="../index.html">模組清單</a></li>
+<li><a href="00-overview.html">平台總覽</a></li>
+<li><a href="01-repo-root.html">Repo 根目錄</a></li>
+<li><a href="02-build-entry.html">建置進口</a></li>
+</ul>
+<h2>共用 driver / library</h2><ul>
+<li><a href="acpi-tables.html">AcpiTables</a></li>
+<li><a href="include.html">Include</a></li>
+<li><a href="library.html">Library</a></li>
+<li><a href="pci-platform.html">PciPlatformDxe</a></li>
+<li><a href="flash-info.html">FlashInfo</a></li>
+<li><a href="bios-update-policy.html">BiosUpdatePlatformPolicy</a></li>
+<li><a href="platform-setup.html">PlatformSetup</a></li>
+<li><a href="platform-forms.html">PlatformForms</a></li>
+<li><a href="platform-mud.html">PlatformMud</a></li>
+<li><a href="platform-wmi.html">PlatformPrivateWMI</a></li>
+<li><a href="hp-icicle.html">HpIcicle</a></li>
+<li><a href="secure-storage.html">HpSecureStorageDevice</a></li>
+<li><a href="z2-thermal.html">風扇與 APU 功耗</a></li>
+<li><a href="hp-z2-ecc.html">HpZ2AmdEccLink</a></li>
+<li><a href="hotkey.html">Hotkey</a></li>
+<li><a href="smart-cover.html">SmartCover</a></li>
+<li><a href="als.html">AlsCalibration</a></li>
+<li><a href="amd-sio-vw.html">AmdSioVwSmi</a></li>
+<li><a href="wifi-support.html">WiFiSupport</a></li>
+</ul>
+<h2>Fixup</h2><ul>
+<li><a href="fixup.html" class="current">Fixup / Override</a></li>
+</ul>
+<h2>MultiProject</h2><ul>
+<li><a href="multiproject.html">共用骨架</a></li>
+<li><a href="x53-config.html">X53Mint Config</a></li>
+<li><a href="x53-cpm.html">X53Mint CpmOverride</a></li>
+<li><a href="x53-apcb.html">X53Mint APCB</a></li>
+<li><a href="x53-hpfeature.html">X53Mint HpFeature</a></li>
+<li><a href="x53-porting.html">X53Mint Porting</a></li>
+<li><a href="x53-services.html">X53Mint Services</a></li>
+<li><a href="x53-bld-bin.html">X53Mint BLD / EC / FUR</a></li>
+<li><a href="x89-chiron.html">X89Chiron 差異</a></li>
+<li><a href="w95-maple.html">W95MapleCRB 差異</a></li>
+</ul>
+</nav>
+<main>
+  <header class="page">
+    <h1>Fixup / Override</h1>
+  </header>
+  <p class="role">hpprep 在編譯前把 Override 檔複製到 gitman 套件上；hpcln 再還原。這是「不能直接改上游」時的補丁目錄。</p>
+  
+<h2>大綱</h2>
+<ul class="outline">
+  <li><code>Fixup/readme.txt</code>、<code>Fixup/Wks/readme.txt</code>：流程與注意事項（改動要加 <code>[HP_MOD_FIXUP]</code>）。</li>
+  <li><code>Fixup/Override/</code>：較通用的 Core/Feature/EDK 補丁。</li>
+  <li><code>Fixup/Wks/Override/</code>：工作站（Wks）專用，量大。</li>
+  <li>Backup 目錄被 gitignore，是 prep 的備份。</li>
+</ul>
+<h2>詳細解釋</h2>
+<h3>機制</h3>
+<p>預先建置（hpprep）把 Override 樹鏡射到 <code>HpCore</code>、<code>HpFeature</code>、<code>Amd</code> 等 checkout。所以你在那些套件裡看到的 diff，有可能來自這裡而不是上游 commit。讀碼時若上游檔「怎麼跟 GitHub 不一樣」，先搜 Fixup。</p>
+<h3>Wks Override 分類</h3>
+<table>
+<thead><tr><th>Override 根</th><th>典型改動</th></tr></thead>
+<tbody>
+<tr><td>HpCore</td><td>Setup Main.vfr、USB/XHCI、Smbios、BootOrder F10、ErrorHandling、PublicWmi MOF、Absolute Persistence。</td></tr>
+<tr><td>HpFeature</td><td>USB port 外接政策、Gfx ACPI、BuiltInDevice 視訊記憶體、ConnectionDevice、Thermal PMF、Electronic Label、ErrorHandling CMOS 按鈕。</td></tr>
+<tr><td>Amd</td><td>AGESA NBIO STXH early init、APCB SPD header、CPM Maple addendum、FCH SMM。</td></tr>
+<tr><td>HpAmd</td><td>Chipset PlatformStage2、VideoMemorySize、DASH/DMTF、TSME。</td></tr>
+<tr><td>HpEpsc</td><td>Nuvoton 324 SIO ASL/監控、USB-C UCSI、TI PD discovery。</td></tr>
+</tbody>
+</table>
+<p>根 <code>Fixup/readme.txt</code> 還列了歷史項目（PSP、CMOS 0x0B、SMM paging、UMA/DIS）。Wks readme 目前記了一筆：BCU 裡 Wi-Fi 裝置類型字串（EMBEDDED vs EXPANSION）。</p>
+
+  <section class="next"><h2>建議接著看</h2><p><a href="01-repo-root.html">gitman</a> · <a href="x53-cpm.html">CpmOverride（官方 OEM 表，不是 Fixup）</a></p></section>
+</main>
+</div>
+</body>
+</html>

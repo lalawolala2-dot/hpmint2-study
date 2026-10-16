@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HpMint2 模組清單 — HpMint2 學習文件</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar">
+<h1>HpMint2 學習文件</h1>
+<div class="tag">EDK II platform · 離線靜態站</div>
+<h2>總覽與建置</h2><ul>
+<li><a href="index.html" class="current">模組清單</a></li>
+<li><a href="modules/00-overview.html">平台總覽</a></li>
+<li><a href="modules/01-repo-root.html">Repo 根目錄</a></li>
+<li><a href="modules/02-build-entry.html">建置進口</a></li>
+</ul>
+<h2>共用 driver / library</h2><ul>
+<li><a href="modules/acpi-tables.html">AcpiTables</a></li>
+<li><a href="modules/include.html">Include</a></li>
+<li><a href="modules/library.html">Library</a></li>
+<li><a href="modules/pci-platform.html">PciPlatformDxe</a></li>
+<li><a href="modules/flash-info.html">FlashInfo</a></li>
+<li><a href="modules/bios-update-policy.html">BiosUpdatePlatformPolicy</a></li>
+<li><a href="modules/platform-setup.html">PlatformSetup</a></li>
+<li><a href="modules/platform-forms.html">PlatformForms</a></li>
+<li><a href="modules/platform-mud.html">PlatformMud</a></li>
+<li><a href="modules/platform-wmi.html">PlatformPrivateWMI</a></li>
+<li><a href="modules/hp-icicle.html">HpIcicle</a></li>
+<li><a href="modules/secure-storage.html">HpSecureStorageDevice</a></li>
+<li><a href="modules/z2-thermal.html">風扇與 APU 功耗</a></li>
+<li><a href="modules/hp-z2-ecc.html">HpZ2AmdEccLink</a></li>
+<li><a href="modules/hotkey.html">Hotkey</a></li>
+<li><a href="modules/smart-cover.html">SmartCover</a></li>
+<li><a href="modules/als.html">AlsCalibration</a></li>
+<li><a href="modules/amd-sio-vw.html">AmdSioVwSmi</a></li>
+<li><a href="modules/wifi-support.html">WiFiSupport</a></li>
+</ul>
+<h2>Fixup</h2><ul>
+<li><a href="modules/fixup.html">Fixup / Override</a></li>
+</ul>
+<h2>MultiProject</h2><ul>
+<li><a href="modules/multiproject.html">共用骨架</a></li>
+<li><a href="modules/x53-config.html">X53Mint Config</a></li>
+<li><a href="modules/x53-cpm.html">X53Mint CpmOverride</a></li>
+<li><a href="modules/x53-apcb.html">X53Mint APCB</a></li>
+<li><a href="modules/x53-hpfeature.html">X53Mint HpFeature</a></li>
+<li><a href="modules/x53-porting.html">X53Mint Porting</a></li>
+<li><a href="modules/x53-services.html">X53Mint Services</a></li>
+<li><a href="modules/x53-bld-bin.html">X53Mint BLD / EC / FUR</a></li>
+<li><a href="modules/x89-chiron.html">X89Chiron 差異</a></li>
+<li><a href="modules/w95-maple.html">W95MapleCRB 差異</a></li>
+</ul>
+</nav>
+<main>
+  <header class="page">
+    <h1>HpMint2 模組清單</h1>
+  </header>
+  <p class="role">這份靜態站把 HpMint2（HP AMD 工作站 BIOS 的 platform 層）拆成 folder module：每頁一句話角色、大綱、再往下解釋。預設主專案是 X53Mint / Z2_MINI。</p>
+  
+<h2>建議閱讀順序</h2>
+<ol>
+  <li><a href="modules/00-overview.html">平台總覽</a>：這個 repo 在整棵 BIOS 樹裡站哪裡。</li>
+  <li><a href="modules/02-build-entry.html">建置進口</a>：<code>PlatformPkg.dsc</code> 如何把外部套件與本平台 glue 在一起。</li>
+  <li><a href="modules/multiproject.html">MultiProject 共用骨架</a>，再進 <a href="modules/x53-cpm.html">CpmOverride</a> 與 <a href="modules/x53-config.html">Config</a>。</li>
+  <li>共用 ACPI / Library / 風扇功耗 等跨 SKU 程式。</li>
+  <li>最後看 <a href="modules/x89-chiron.html">X89Chiron</a>、<a href="modules/w95-maple.html">W95MapleCRB</a> 與 X53 的差異。</li>
+</ol>
+
+<h2>A. 總覽與建置</h2>
+<div class="cards">
+  <div class="card"><h3><a href="modules/00-overview.html">平台總覽</a></h3><p>X53 / 12453 / Z2_MINI；三個 SKU；gitman 依賴。</p></div>
+  <div class="card"><h3><a href="modules/01-repo-root.html">Repo 根目錄</a></h3><p>CI、CODEOWNERS、gitman.yml、sonar。</p></div>
+  <div class="card"><h3><a href="modules/02-build-entry.html">建置進口</a></h3><p>DSC / DEC / FDF / BLD 腳本。</p></div>
+</div>
+
+<h2>B. HpPlatformPkg 共用 folder module</h2>
+<table>
+<thead><tr><th>資料夾</th><th>一句話</th></tr></thead>
+<tbody>
+<tr><td><a href="modules/acpi-tables.html">AcpiTables</a></td><td>平台 DSDT/SSDT，依 Z2_MINI / MWS_A / CRB5 分板。</td></tr>
+<tr><td><a href="modules/include.html">Include</a></td><td>Protocol、Setup VFR header、Platform ID。</td></tr>
+<tr><td><a href="modules/library.html">Library</a></td><td>約 25 個 platform hook library。</td></tr>
+<tr><td><a href="modules/pci-platform.html">PciPlatformDxe</a></td><td>PCI 平台回呼（Option ROM / 資源）。</td></tr>
+<tr><td><a href="modules/flash-info.html">FlashInfo</a></td><td>Flash 區段與 NVRAM header 資訊。</td></tr>
+<tr><td><a href="modules/bios-update-policy.html">BiosUpdatePlatformPolicy</a></td><td>BIOS 更新政策（PEI + SMM）。</td></tr>
+<tr><td><a href="modules/platform-setup.html">PlatformSetup</a></td><td>Setup 題目、Port Option、WMI。</td></tr>
+<tr><td><a href="modules/platform-forms.html">PlatformForms</a></td><td>Setup 表單 callback 註冊。</td></tr>
+<tr><td><a href="modules/platform-mud.html">PlatformMud</a></td><td>Manufacturing Unique Data（MAC、dAMP…）。</td></tr>
+<tr><td><a href="modules/platform-wmi.html">PlatformPrivateWMI</a></td><td>平台私有 WMI（SMM）。</td></tr>
+<tr><td><a href="modules/hp-icicle.html">HpIcicle</a></td><td>Icicle 診斷/事件（PEI/DXE/SMM）。</td></tr>
+<tr><td><a href="modules/secure-storage.html">HpSecureStorageDevice</a></td><td>安全儲存裝置 PEI/DXE。</td></tr>
+<tr><td><a href="modules/z2-thermal.html">風扇與 APU 功耗</a></td><td>HpZ2PerformacePei、PremiumFan、FanControlUpdate。</td></tr>
+<tr><td><a href="modules/hp-z2-ecc.html">HpZ2AmdEccLink</a></td><td>Z2 AMD ECC 連結。</td></tr>
+<tr><td><a href="modules/hotkey.html">Hotkey</a></td><td>熱鍵 SMM。</td></tr>
+<tr><td><a href="modules/smart-cover.html">SmartCover</a></td><td>機殼蓋偵測 porting / SMBIOS。</td></tr>
+<tr><td><a href="modules/als.html">AlsCalibration</a></td><td>環境光感測校正。</td></tr>
+<tr><td><a href="modules/amd-sio-vw.html">AmdSioVwSmi</a></td><td>SIO 相關 SMI。</td></tr>
+<tr><td><a href="modules/wifi-support.html">WiFiSupport</a></td><td>AMD 平台 Wi-Fi 支援 DXE。</td></tr>
+<tr><td><a href="modules/fixup.html">Fixup</a></td><td>hpprep 覆寫 HpCore / Feature / AGESA。</td></tr>
+</tbody>
+</table>
+
+<h2>C. MultiProject SKU</h2>
+<table>
+<thead><tr><th>路徑</th><th>角色</th></tr></thead>
+<tbody>
+<tr><td><a href="modules/multiproject.html">MultiProject/</a></td><td>三 SKU 平行目錄；<code>HpFeaturePlatformConfig.dsc</code> 彙總 feature 開關。</td></tr>
+<tr><td><a href="modules/x53-config.html">X53Mint/Config</a></td><td>本機 PCD 與平台 DEFINE（深讀）。</td></tr>
+<tr><td><a href="modules/x53-cpm.html">X53Mint/CpmOverride</a></td><td>OEM CPM 表：GPIO、DXIO、USB、RTD3。</td></tr>
+<tr><td><a href="modules/x53-apcb.html">X53Mint/APCB</a></td><td>LPDDR5 APCB / vendor 變體表格。</td></tr>
+<tr><td><a href="modules/x53-hpfeature.html">X53Mint/HpFeature</a></td><td>feature 開關與 gfx/usb/thermal hook。</td></tr>
+<tr><td><a href="modules/x53-porting.html">X53Mint PlatformPorting*</a></td><td>PEI / DXE / SMM 板級 porting。</td></tr>
+<tr><td><a href="modules/x53-services.html">X53Mint Services + Library</a></td><td>HpPlatformServices 與板級 lib。</td></tr>
+<tr><td><a href="modules/x53-bld-bin.html">X53Mint BLD / EC / FUR / Binaries</a></td><td>映像、EC、PD/Retimer、Preboot Wi-Fi。</td></tr>
+<tr><td><a href="modules/x89-chiron.html">X89Chiron</a></td><td>Notebook / MWS_A 差異大綱。</td></tr>
+<tr><td><a href="modules/w95-maple.html">W95MapleCRB</a></td><td>Maple CRB 差異大綱。</td></tr>
+</tbody>
+</table>
+<p>本文件不展開 gitman 拉進來的 <code>HpCore</code> / <code>HpFeature</code> / <code>Amd</code> 內部；那些套件不在本 repo 原始碼裡。</p>
+
+  <section class="next"><h2>建議接著看</h2><p>從 <a href="modules/00-overview.html">平台總覽</a> 開始。</p></section>
+</main>
+</div>
+</body>
+</html>

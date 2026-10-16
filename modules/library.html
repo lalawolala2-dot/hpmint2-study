@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Library — HpMint2 學習文件</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar">
+<h1>HpMint2 學習文件</h1>
+<div class="tag">EDK II platform · 離線靜態站</div>
+<h2>總覽與建置</h2><ul>
+<li><a href="../index.html">模組清單</a></li>
+<li><a href="00-overview.html">平台總覽</a></li>
+<li><a href="01-repo-root.html">Repo 根目錄</a></li>
+<li><a href="02-build-entry.html">建置進口</a></li>
+</ul>
+<h2>共用 driver / library</h2><ul>
+<li><a href="acpi-tables.html">AcpiTables</a></li>
+<li><a href="include.html">Include</a></li>
+<li><a href="library.html" class="current">Library</a></li>
+<li><a href="pci-platform.html">PciPlatformDxe</a></li>
+<li><a href="flash-info.html">FlashInfo</a></li>
+<li><a href="bios-update-policy.html">BiosUpdatePlatformPolicy</a></li>
+<li><a href="platform-setup.html">PlatformSetup</a></li>
+<li><a href="platform-forms.html">PlatformForms</a></li>
+<li><a href="platform-mud.html">PlatformMud</a></li>
+<li><a href="platform-wmi.html">PlatformPrivateWMI</a></li>
+<li><a href="hp-icicle.html">HpIcicle</a></li>
+<li><a href="secure-storage.html">HpSecureStorageDevice</a></li>
+<li><a href="z2-thermal.html">風扇與 APU 功耗</a></li>
+<li><a href="hp-z2-ecc.html">HpZ2AmdEccLink</a></li>
+<li><a href="hotkey.html">Hotkey</a></li>
+<li><a href="smart-cover.html">SmartCover</a></li>
+<li><a href="als.html">AlsCalibration</a></li>
+<li><a href="amd-sio-vw.html">AmdSioVwSmi</a></li>
+<li><a href="wifi-support.html">WiFiSupport</a></li>
+</ul>
+<h2>Fixup</h2><ul>
+<li><a href="fixup.html">Fixup / Override</a></li>
+</ul>
+<h2>MultiProject</h2><ul>
+<li><a href="multiproject.html">共用骨架</a></li>
+<li><a href="x53-config.html">X53Mint Config</a></li>
+<li><a href="x53-cpm.html">X53Mint CpmOverride</a></li>
+<li><a href="x53-apcb.html">X53Mint APCB</a></li>
+<li><a href="x53-hpfeature.html">X53Mint HpFeature</a></li>
+<li><a href="x53-porting.html">X53Mint Porting</a></li>
+<li><a href="x53-services.html">X53Mint Services</a></li>
+<li><a href="x53-bld-bin.html">X53Mint BLD / EC / FUR</a></li>
+<li><a href="x89-chiron.html">X89Chiron 差異</a></li>
+<li><a href="w95-maple.html">W95MapleCRB 差異</a></li>
+</ul>
+</nav>
+<main>
+  <header class="page">
+    <h1>Library</h1>
+  </header>
+  <p class="role">跨 SKU 的 platform hook：把 HpFeature / 晶片套件需要的 LibraryClass 接到這塊板上的實作。</p>
+  
+<h2>大綱（INF）</h2>
+<table>
+<thead><tr><th>Library</th><th>角色</th></tr></thead>
+<tbody>
+<tr><td>HpPlatformAudioInitLib / Cs3534</td><td>HD Audio / Cirrus 初始化。</td></tr>
+<tr><td>HpVerbTableLib</td><td>Codec verb table。</td></tr>
+<tr><td>HpFanConfigurationLib</td><td>風扇表。</td></tr>
+<tr><td>HpThermalPlatformHookBaseLib</td><td>熱政策 hook（另有 X53 自己一份）。</td></tr>
+<tr><td>HpSioVoltagePwrMonitorLib、PlatformSioInitPeiLib、PlatformNuvotonInitPeiLib</td><td>SIO 電壓監控與 PEI 初始化。</td></tr>
+<tr><td>SioCarbonFpCalculationTableLib</td><td>碳／指紋相關 SIO 計算表。</td></tr>
+<tr><td>SerialPortPlatformHook*（Desktop / Mobile / Mandolin CRB）</td><td>序列埠 hook 多實作。</td></tr>
+<tr><td>PlatformStage1HookLib / PlatformStage2HookLib</td><td>AGESA 前後平台 hook。</td></tr>
+<tr><td>HpPlatformPcdUpdateLib、BasePcdExportLib</td><td>建置/執行期 PCD。</td></tr>
+<tr><td>HpPlatformTablesLib</td><td>裝置表（含 WWANTable.c）。</td></tr>
+<tr><td>HpGNvsPlatformUpdateLib</td><td>Global NVS 更新。</td></tr>
+<tr><td>HpScriptLib、S3BootScriptTable</td><td>PCI/MMIO script 與 S3 還原。</td></tr>
+<tr><td>PlatformGraphicsConfiguration</td><td>圖形組態。</td></tr>
+<tr><td>PlatformRequestLib、PlatformDefaultSettingsSmmLib</td><td>平台請求與 SMM 預設。</td></tr>
+<tr><td>DxeHidI2cPlatformSupportLib、HpPlatformHidI2cTouchSupportLib</td><td>HID I2C / 觸控。</td></tr>
+<tr><td>ExternalUsbCustomStringLib</td><td>外接 USB 顯示字串。</td></tr>
+<tr><td>HpCpuInfoLib、HpVpinSelectionLib</td><td>CPU 資訊、VPIN。</td></tr>
+<tr><td>HpMobileWirelessUsbDetectHookLib、FusionDriverDefaultsLib</td><td>無線 USB 偵測、Fusion 預設。</td></tr>
+</tbody>
+</table>
+<h2>詳細解釋</h2>
+<p>EDK II 的 LibraryClass 在 DSC 指定「這個名字用哪份 INF」。HpFeature 宣告 hook 介面；本目錄給預設/共用實作。SKU 若要覆寫（例如 USB port、GPIO feature table），會放在 <code>MultiProject/&lt;SKU&gt;/HpFeature/.../Library</code> 或 <code>MultiProject/.../Library</code>，DSC 優先指到那裡。</p>
+<p><code>HpScriptLib.c</code> 內有平台 PCI command / IOMMU / SATA 等 script 表，並帶 S3 restore 旗標，是改 SSID 或早期 PCI 程式時會碰到的檔。</p>
+
+  <section class="next"><h2>建議接著看</h2><p><a href="x53-hpfeature.html">X53 HpFeature hooks</a> · <a href="x53-services.html">SKU Library</a></p></section>
+</main>
+</div>
+</body>
+</html>
